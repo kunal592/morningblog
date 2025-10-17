@@ -45,10 +45,12 @@ export const userColumns = [
   {
     accessorKey: "followers",
     header: "Followers",
+    cell: ({ row }: { row: { original: User } }) => row.original.followers,
   },
     {
     accessorKey: "following",
     header: "Following",
+    cell: ({ row }: { row: { original: User } }) => row.original.following,
   },
   {
     id: "actions",

@@ -1,7 +1,12 @@
-import Link from "next/link"
-import { ThemeToggle } from "./theme-toggle"
+import Link from "next/link";
+import { ThemeToggle } from "./theme-toggle";
+import { auth } from "@/auth";
+import { SignIn } from "./auth/sign-in";
+import { SignOut } from "./auth/sign-out";
 
-export function PublicHeader() {
+export async function PublicHeader() {
+  const session = await auth();
+
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background/80 px-4 backdrop-blur-sm md:px-8">
       <Link href="/home" className="flex items-center gap-2">
@@ -21,6 +26,7 @@ export function PublicHeader() {
         <Link href="/about" passHref><span className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">About</span></Link>
         <Link href="/contactus" passHref><span className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Contact Us</span></Link>
         <ThemeToggle />
+        {session ? <SignOut /> : <SignIn />}
       </div>
     </header>
   )

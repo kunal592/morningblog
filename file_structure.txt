@@ -1,0 +1,45 @@
+
+## Root Directory
+
+*   `apphosting.yaml`: Configuration file for Firebase App Hosting.
+*   `auth.ts`: NextAuth configuration for authentication, using Prisma as an adapter.
+*   `components.json`: Configuration for the shadcn/ui component library.
+*   `next.config.ts`: Configuration file for Next.js, including settings for TypeScript, ESLint, and image optimization.
+*   `postcss.config.mjs`: Configuration file for PostCSS, used for processing CSS.
+*   `tailwind.config.ts`: Configuration file for Tailwind CSS, a utility-first CSS framework.
+*   `tsconfig.json`: Configuration file for TypeScript, specifying compiler options and file paths.
+
+## `src` Directory
+
+### `src/ai`
+
+*   `dev.ts`: Development-related AI script, likely for testing or development purposes.
+*   `genkit.ts`: Configures the Genkit AI framework with the Google AI plugin.
+
+### `src/ai/flows`
+
+*   `ai-seo-optimize-blog-post.ts`: Defines a Genkit flow that provides SEO optimization suggestions for a given blog post, including keyword suggestions, a meta description, and readability improvements.
+*   `ai-summarize-blog.ts`: Defines a Genkit flow that summarizes a blog post.
+
+### `src/app`
+
+*   `layout.tsx`: The root layout for the Next.js application. It sets up the HTML structure, includes the Inter font from Google Fonts, and wraps the application in a `Providers` component.
+*   `page.tsx`: The root page of the application, which simply redirects to `/home`.
+
+### `src/components`
+
+*   `blog-card.tsx`: A component that displays a blog post in a card format. It includes the blog's title, content, author, and tags. It also includes buttons for liking, commenting, bookmarking, and sharing the post. The component can be displayed in a grid or list view.
+*   `comment-section.tsx`: A component that displays a list of comments for a blog post. It also includes a form for adding a new comment.
+*   `grid-list-toggle.tsx`: A component that allows the user to switch between a grid and list view.
+*   `md-editor.tsx`: A component that provides a Markdown editor with a live preview. It uses `react-markdown` to render the Markdown content.
+*   `page-header.tsx`: A component that displays a page header. It includes a user avatar with a dropdown menu for navigation and a trigger for a mobile sidebar.
+*   `providers.tsx`: A component that wraps the application in a `ThemeProvider` to provide theme switching functionality. It also includes the `Toaster` component for displaying notifications.
+*   `public-header.tsx`: A component for the public-facing header of the application. It includes the application logo, which links to the home page, and navigation links for "About" and "Contact Us". It also includes a `ThemeToggle` component to switch between light and dark themes.
+*   `site-sidebar.tsx`: A collapsible sidebar component that provides navigation for the application. It includes primary navigation links (Home, Feed, Write), secondary navigation links (About, Contact Us), user-specific links (Notifications, Profile, Dashboard, Settings, Admin), and a theme toggle.
+*   `theme-toggle.tsx`: A component that provides a dropdown menu to switch between light, dark, and system themes.
+
+### `src/components/ui`
+
+*   `accordion.tsx`: A vertically stacked set of interactive headings that each reveal a section of content. Based on Radix UI's Accordion component.
+*   `alert-dialog.tsx`: A modal dialog that interrupts the user with important content and expects a response. Based on Radix UI's Alert Dialog component.
+*   `alert.tsx`: Displays a callout for user attention. Based on a custom component with default and destructive variants.

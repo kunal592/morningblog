@@ -12,9 +12,10 @@ import { Card } from "@/components/ui/card";
 
 interface DataTableProps<TData> {
   columns: {
-    accessorKey: string,
-    header: string,
-    cell: (props: { row: { original: TData } }) => React.ReactNode,
+    id?: string;
+    accessorKey?: string;
+    header: string;
+    cell: (props: { row: { original: TData } }) => React.ReactNode;
   }[];
   data: TData[];
 }
@@ -29,7 +30,7 @@ export function UserDataTable<TData extends {id: string}>({
         <TableHeader>
           <TableRow>
             {columns.map((column) => (
-              <TableHead key={column.accessorKey}>{column.header}</TableHead>
+              <TableHead key={column.id || column.accessorKey}>{column.header}</TableHead>
             ))}
           </TableRow>
         </TableHeader>
@@ -38,7 +39,7 @@ export function UserDataTable<TData extends {id: string}>({
             data.map((row) => (
               <TableRow key={row.id}>
                 {columns.map((column) => (
-                  <TableCell key={column.accessorKey}>
+                  <TableCell key={column.id || column.accessorKey}>
                     {column.cell({ row: { original: row } })}
                   </TableCell>
                 ))}

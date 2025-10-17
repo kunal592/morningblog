@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from '@/components/providers';
+import { PublicHeader } from '@/components/public-header';
 
 export const metadata: Metadata = {
   title: 'Narrato',
@@ -23,7 +24,10 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <Providers>{children}</Providers>
+        <Providers>
+          <PublicHeader />
+          {children}
+        </Providers>
       </body>
     </html>
   );
