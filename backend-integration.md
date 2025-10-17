@@ -1,82 +1,74 @@
-# Backend Integration Guide
 
-This document outlines the API endpoints required for the frontend application and provides guidance on how to integrate them.
+# Backend Integration Analysis
 
-## API Endpoints
+This document analyzes the frontend's requirements for backend endpoints and outlines the necessary API endpoints for full functionality.
 
-The following API endpoints need to be created in the backend:
+## Frontend Components Requiring Backend Interaction
 
-### Blog Posts
+Based on the file structure, the following frontend components require backend interaction to operate with real data:
 
-*   **`GET /api/blogs`**: Get a list of all blog posts.
-*   **`GET /api/blogs/published`**: Get a list of published blog posts.
-*   **`GET /api/blogs/unpublished`**: Get a list of unpublished blog posts (drafts).
-*   **`GET /api/blogs/user/:userId`**: Get all blog posts for a specific user.
-*   **`GET /api/blogs/feed`**: Get the current user's feed (blogs from followed authors).
-*   **`GET /api/blogs/:slug`**: Get a single blog post by its slug.
-*   **`POST /api/blogs`**: Create a new blog post.
-    *   **Request Body**:
-        ```json
-        {
-          "title": "string",
-          "content": "string",
-          "isPublished": "boolean"
-        }
-        ```
-*   **`PUT /api/blogs/:id`**: Update a blog post (for publishing or saving drafts).
-    *   **Request Body**:
-        ```json
-        {
-          "title": "string",
-          "content": "string",
-          "isPublished": "boolean"
-        }
-        ```
-*   **`DELETE /api/blogs/:id`**: Delete a blog post.
+*   **`src/app/(protected)/admin/page.tsx`**: Administrator dashboard. Requires endpoints for managing users, blog posts, and other site content.
+*   **`src/app/(protected)/feed/page.tsx`**: Displays a feed of blog posts. Requires an endpoint to fetch all blog posts.
+*   **`src/app/(protected)/postblog/page.tsx`**: Page for creating and editing blog posts. Requires endpoints for creating, updating, and deleting blog posts.
+*   **`src/app/blog/[slug]/page.tsx`**: Detail page for a single blog post. Requires an endpoint to fetch a single blog post by its slug and endpoints for managing comments.
+*   **`src/app/(public)/contactus/page.tsx`**: The contact form, which has an existing backend endpoint.
+*   **`src/app/dashboard/page.tsx`**: User-specific dashboard. Requires endpoints for user-specific data.
+*   **`src/app/profile/page.tsx`**: User profile page. Requires endpoints to get and update user data.
+*   **`src/app/settings/page.tsx`**: User settings page. Requires endpoints to get and update user settings.
+*   **`src/app/notification/page.tsx`**: Notifications page. Requires an endpoint to fetch notifications for the user.
+*   **`src/components/auth/sign-in.tsx` & `src/components/auth/sign-out.tsx`**: Authentication components. Require endpoints for login and logout.
+*   **`src/components/blog/comment-section.tsx`**: Comment section for blog posts. Requires endpoints to create, read, update, and delete comments.
+
+## Existing Backend Endpoints
+
+The current backend provides a single endpoint:
+
+*   **`POST /api/contact`**: Sends an email from the contact form.
+
+## Missing Backend Endpoints and Implementation Plan
+
+To connect the frontend to a fully functional backend, the following RESTful API endpoints are missing. This section outlines the required endpoints and provides a basic implementation plan. The following examples will assume the use of a database like PostgreSQL with Prisma as the ORM.
+
+### Authentication
+
+*   **`POST /api/auth/login`**: User login.
+    *   **Request Body**: `{ "email": "user@example.com", "password": "password123" }`
+    *   **Response**: `{ "token": "jwt_token" }`
+*   **`POST /api/auth/logout`**: User logout.
+    *   **Implementation**: Invalidate the user's session/token.
+*   **`GET /api/auth/session`**: Get the current user session.
+    *   **Implementation**: Return the current user's data if a valid session/token exists.
 
 ### Users
 
-*   **`GET /api/users`**: Get a list of all users (for admin).
-*   **`GET /api/users/:id`**: Get a single user by their ID.
-*   **`POST /api/users/follow/:userId`**: Follow an author.
-*   **`POST /api/users/unfollow/:userId`**: Unfollow an author.
+*   **`GET /api/users`**: Get a list of all users (admin only).
+*   **`GET /api/users/{id}`**: Get a single user by ID.
+*   **`PUT /api/users/{id}`**: Update a user by ID.
+*   **`DELETE /api/users/{id}`**: Delete a user by ID.
+*   **`GET /api/me`**: Get the currently logged-in user's profile data.
+*   **`PUT /api/me`**: Update the currently logged-in user's profile data.
+
+### Blog Posts
+
+*   **`GET /api/posts`**: Get all blog posts.
+*   **`GET /api/posts/{slug}`**: Get a single blog post by slug.
+*   **`POST /api/posts`**: Create a new blog post.
+*   **`PUT /api/posts/{id}`**: Update a blog post by ID.
+*   **`DELETE /api/posts/{id}`**: Delete a blog post by ID.
 
 ### Comments
 
-*   **`POST /api/comments`**: Add a comment to a blog post.
-    *   **Request Body**:
-        ```json
-        {
-          "blogId": "string",
-          "content": "string"
-        }
-        ```
+*   **`GET /api/posts/{postId}/comments`**: Get all comments for a blog post.
+*   **`POST /api/posts/{postId}/comments`**: Create a new comment for a blog post.
+*   **`PUT /api/comments/{id}`**: Update a comment by ID.
+*   **`DELETE /api/comments/{id}`**: Delete a comment by ID.
 
-## Frontend Integration
+### Notifications
 
-To connect the frontend to the backend, you will need to replace the mock data with API calls to the endpoints listed above. Here's a list of the files that need to be updated:
+*   **`GET /api/notifications`**: Get all notifications for the current user.
+*   **`POST /api/notifications/{id}/read`**: Mark a notification as read.
 
-*   `src/app/dashboard/page.tsx`: Fetch user's published and unpublished blogs.
-*   `src/app/(protected)/feed/page.tsx`: Fetch the user's feed.
-*   `src/app/(protected)/postblog/page.tsx`: Implement `handlePublish` and `handleSaveDraft` to create and update blog posts.
-*   `src/app/blog/[slug]/page.tsx`: Fetch blog post data by slug.
-*   `src/components/blog/comment-section.tsx`: Implement the "Post Comment" functionality.
-*   `src/app/(protected)/admin/page.tsx`: Fetch user and blog data for the admin dashboard.
+### Settings
 
-Here's an example of how to fetch data in a Next.js component using `fetch`:
-
-```typescript
-async function getData() {
-  const res = await fetch('http://localhost:3000/api/blogs');
-  if (!res.ok) {
-    throw new Error('Failed to fetch data');
-  }
-  return res.json();
-}
-
-export default async function Page() {
-  const data = await getData();
-
-  return <main></main>;
-}
-```
+*   **`GET /api/settings`**: Get user settings.
+*   **`PUT /api/settings`**: Update user settings.
