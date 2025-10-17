@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { getBlogBySlug, getImageById } from '@/lib/mock-data';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { CommentSection } from '@/components/comment-section';
+import { CommentSection } from '@/components/blog/comment-section';
 import { Heart, Bookmark, Share2 } from 'lucide-react';
 
 

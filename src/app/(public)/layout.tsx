@@ -1,4 +1,4 @@
-import { PublicHeader } from '@/components/public-header';
+import { PublicHeader } from '@/components/layout/public-header';
 import { ReactNode } from 'react';
 
 interface PublicLayoutProps {

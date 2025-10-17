@@ -2,10 +2,10 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockBlogs, mockUsers } from "@/lib/mock-data";
-import { UserDataTable } from "./components/user-data-table";
-import { userColumns } from "./components/user-columns";
-import { BlogDataTable } from "./components/blog-data-table";
-import { blogColumns } from "./components/blog-columns";
+import { UserDataTable } from "@/components/admin/user-data-table";
+import { userColumns } from "@/components/admin/user-columns";
+import { BlogDataTable } from "@/components/admin/blog-data-table";
+import { blogColumns } from "@/components/admin/blog-columns";
 
 export default function AdminPage() {
   return (

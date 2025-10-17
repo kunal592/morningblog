@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/user/morningblog/src/app/%28public%29/layout.tsx"],"sourcesContent":["import { PublicHeader } from '@/components/layout/public-header';\nimport { ReactNode } from 'react';\n\ninterface PublicLayoutProps {\n  children: ReactNode;\n}\n\nexport default function PublicLayout({ children }: PublicLayoutProps) {\n  return (\n    <div>\n      <PublicHeader />\n      <main className=\"p-6 md:p-8\">\n        {children}\n      </main>\n    </div>\n  );\n}"],"names":[],"mappings":";;;;;AAAA;;;AAOe,SAAS,aAAa,EAAE,QAAQ,EAAqB;IAClE,qBACE,8OAAC;;0BACC,8OAAC,gKAAY;;;;;0BACb,8OAAC;gBAAK,WAAU;0BACb;;;;;;;;;;;;AAIT","debugId":null}}]
+}

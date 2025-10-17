@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Rss } from 'lucide-react';
-import { BlogCard } from '@/components/blog-card';
+import { BlogCard } from '@/components/blog/blog-card';
 import { mockBlogs } from '@/lib/mock-data';
 
 export default function FeedPage() {

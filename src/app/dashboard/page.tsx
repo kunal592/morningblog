@@ -5,8 +5,8 @@ import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockBlogs, mockUsers } from "@/lib/mock-data";
-import { DataTable } from "./components/data-table";
-import { columns } from "./components/columns";
+import { DataTable } from "@/components/dashboard/data-table";
+import { columns } from "@/components/dashboard/columns";
 
 export default function DashboardPage() {
   const currentUser = mockUsers[0];

@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { BlogCard } from "@/components/blog-card"
-import { GridListToggle } from "@/components/grid-list-toggle"
+import { BlogCard } from "@/components/blog/blog-card"
+import { GridListToggle } from "@/components/layout/grid-list-toggle"
 import { mockBlogs } from "@/lib/mock-data"
 import { useLocalStorage } from "@/hooks/use-local-storage"
 import { cn } from "@/lib/utils"
