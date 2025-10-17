@@ -54,7 +54,7 @@ export async function PUT(
 
   try {
     const post = await prisma.post.findUnique({
-      where: { id: params.slug },
+      where: { slug: params.slug },
     });
 
     if (!post || post.authorId !== session.user.id) {
@@ -65,7 +65,7 @@ export async function PUT(
 
     const updatedPost = await prisma.post.update({
       where: {
-        id: params.slug,
+        slug: params.slug,
       },
       data: {
         title,
@@ -100,7 +100,7 @@ export async function DELETE(
 
   try {
     const post = await prisma.post.findUnique({
-      where: { id: params.slug },
+      where: { slug: params.slug },
     });
 
     if (!post || post.authorId !== session.user.id) {
@@ -109,7 +109,7 @@ export async function DELETE(
 
     await prisma.post.delete({
       where: {
-        id: params.slug,
+        slug: params.slug,
       },
     });
 
