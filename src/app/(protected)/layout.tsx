@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/page-header';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 
-export function MainLayout({ children }: { children: React.ReactNode }) {
+export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   
   return (
