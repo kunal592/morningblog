@@ -2,7 +2,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from '@/components/providers';
-import { PublicHeader } from '@/components/layout/public-header';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -27,7 +26,6 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <Providers>
-          <PublicHeader />
           <nav className="bg-gray-800 p-4">
             <div className="container mx-auto flex justify-between">
               <div className="flex space-x-4">

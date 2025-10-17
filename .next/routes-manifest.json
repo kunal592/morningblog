@@ -76,14 +76,6 @@
       "namedRegex": "^/blog/(?<nxtPslug>[^/]+?)(?:/)?$"
     },
     {
-      "page": "/blog/[slug]/edit",
-      "regex": "^/blog/([^/]+?)/edit(?:/)?$",
-      "routeKeys": {
-        "nxtPslug": "nxtPslug"
-      },
-      "namedRegex": "^/blog/(?<nxtPslug>[^/]+?)/edit(?:/)?$"
-    },
-    {
       "page": "/profile/[id]",
       "regex": "^/profile/([^/]+?)(?:/)?$",
       "routeKeys": {
