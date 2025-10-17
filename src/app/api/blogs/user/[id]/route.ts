@@ -6,11 +6,11 @@ const prisma = new PrismaClient();
 
 export async function GET(
   request: Request,
-  { params }: { params: { userId: string } }
+  { params }: { params: { id: string } }
 ) {
-  const { userId } = params;
+  const { id } = params;
   const blogs = await prisma.post.findMany({
-    where: { authorId: userId },
+    where: { authorId: id },
   });
   return NextResponse.json(blogs);
 }

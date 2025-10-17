@@ -1,24 +1,21 @@
 
 ### Get all users
-GET http://localhost:3000/api/users
+GET http://localhost:9002/api/users
 
 ### Get user by ID
-GET http://localhost:3000/api/users/1
+GET http://localhost:9002/api/users?id=1
 
 ### Get all blogs
-GET http://localhost:3000/api/blogs
-
-### Get blog by ID
-GET http://localhost:3000/api/blogs/1
+GET http://localhost:9002/api/blogs
 
 ### Get blog by slug
-GET http://localhost:3000/api/blogs/my-first-post
+GET http://localhost:9002/api/blogs/my-first-post
 
 ### Get comments for a blog
-GET http://localhost:3000/api/blogs/1/comments
+GET http://localhost:9002/api/blogs/my-first-post/comments
 
 ### Create a new blog post
-POST http://localhost:3000/api/blogs
+POST http://localhost:9002/api/blogs
 Content-Type: application/json
 
 {
@@ -28,7 +25,7 @@ Content-Type: application/json
 }
 
 ### Update a blog post
-PUT http://localhost:3000/api/blogs/1
+PUT http://localhost:9002/api/blogs/my-first-post
 Content-Type: application/json
 
 {
@@ -37,10 +34,10 @@ Content-Type: application/json
 }
 
 ### Delete a blog post
-DELETE http://localhost:3000/api/blogs/1
+DELETE http://localhost:9002/api/blogs/my-first-post
 
 ### Follow a user
-POST http://localhost:3000/api/users/follow
+POST http://localhost:9002/api/users/follow
 Content-Type: application/json
 
 {
@@ -49,7 +46,7 @@ Content-Type: application/json
 }
 
 ### Unfollow a user
-POST http://localhost:3000/api/users/unfollow
+POST http://localhost:9002/api/users/unfollow
 Content-Type: application/json
 
 {
@@ -58,11 +55,9 @@ Content-Type: application/json
 }
 
 ### Create a comment
-POST http://localhost:3000/api/comments
+POST http://localhost:9002/api/blogs/my-first-post/comments
 Content-Type: application/json
 
 {
-  "content": "This is a great post!",
-  "authorId": "2",
-  "postId": "1"
+  "content": "This is a great post!"
 }
