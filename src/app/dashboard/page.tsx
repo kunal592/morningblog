@@ -1,39 +1,43 @@
-'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from '@/components/dashboard/data-table';
 import { columns } from '@/components/dashboard/columns';
-import { Post } from '@/lib/types';
-import axios from 'axios';
+import { getBlogs } from '@/actions/blogActions';
+import { auth } from '@/lib/auth';
 
-export default function DashboardPage() {
-  const { data: session, status } = useSession();
-  const [publishedBlogs, setPublishedBlogs] = useState<Post[]>([]);
-  const [unpublishedBlogs, setUnpublishedBlogs] = useState<Post[]>([]);
+export default async function DashboardPage() {
+  const session = await auth();
 
-  useEffect(() => {
-    if (session?.user?.id) {
-      axios.get('/api/blogs/published').then((res) => {
-        setPublishedBlogs(res.data);
-      });
-      axios.get('/api/blogs/unpublished').then((res) => {
-        setUnpublishedBlogs(res.data);
-      });
-    }
-  }, [session]);
-
-  if (status === 'loading') {
-    return <div>Loading...</div>;
-  }
-
-  if (!session) {
+  if (!session?.user?.id) {
     return <div>Access Denied</div>;
   }
+
+  const publishedBlogs = await getBlogs({
+    where: {
+      authorId: session.user.id,
+      publishedAt: {
+        not: null,
+      },
+    },
+    include: {
+        tags: true,
+        author: true
+    }
+  });
+
+  const unpublishedBlogs = await getBlogs({
+    where: {
+      authorId: session.user.id,
+      publishedAt: null,
+    },
+    include: {
+        tags: true,
+        author: true
+    }
+  });
 
   return (
     <div className='space-y-8'>

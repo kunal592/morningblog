@@ -1,13 +1,14 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Comment } from "@/lib/types";
-import axios from "axios";
+import { createComment } from "@/actions/commentActions";
+import { useToast } from "@/hooks/use-toast";
 
 interface CommentSectionProps {
   postId: string;
@@ -18,22 +19,38 @@ export function CommentSection({ postId, initialComments }: CommentSectionProps)
   const { data: session } = useSession();
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [newComment, setNewComment] = useState("");
-
-  useEffect(() => {
-    axios.get(`/api/blogs/${postId}/comments`).then((res) => {
-      setComments(res.data);
-    });
-  }, [postId]);
+  const { toast } = useToast();
 
   const handleCommentSubmit = async () => {
-    if (!newComment.trim()) return;
+    if (!newComment.trim() || !session?.user?.id) return;
 
-    const res = await axios.post(`/api/comments`, { 
-      content: newComment,
-      postId 
-    });
-    setComments([res.data, ...comments]);
-    setNewComment("");
+    try {
+      const comment = await createComment({
+        content: newComment,
+        post: {
+          connect: {
+            id: postId,
+          },
+        },
+        author: {
+          connect: {
+            id: session.user.id,
+          },
+        },
+      });
+      setComments([comment, ...comments]);
+      setNewComment("");
+      toast({
+        title: "Comment Posted!",
+        description: "Your comment has been successfully posted.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to post comment. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
