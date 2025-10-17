@@ -1,8 +1,8 @@
 "use client"
 
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
-import { SiteSidebar } from '@/components/site-sidebar';
-import { PageHeader } from '@/components/page-header';
+import { SiteSidebar } from '@/components/layout/site-sidebar';
+import { PageHeader } from '@/components/layout/page-header';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 

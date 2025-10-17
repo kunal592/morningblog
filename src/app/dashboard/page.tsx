@@ -8,17 +8,22 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DataTable } from '@/components/dashboard/data-table';
 import { columns } from '@/components/dashboard/columns';
-import { Post } from '@/types/post';
+import { Post } from '@/lib/types';
+import axios from 'axios';
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
-  const [userBlogs, setUserBlogs] = useState<Post[]>([]);
+  const [publishedBlogs, setPublishedBlogs] = useState<Post[]>([]);
+  const [unpublishedBlogs, setUnpublishedBlogs] = useState<Post[]>([]);
 
   useEffect(() => {
     if (session?.user?.id) {
-      fetch(`/api/users/${session.user.id}/posts`)
-        .then((res) => res.json())
-        .then((data) => setUserBlogs(data));
+      axios.get('/api/blogs/published').then((res) => {
+        setPublishedBlogs(res.data);
+      });
+      axios.get('/api/blogs/unpublished').then((res) => {
+        setUnpublishedBlogs(res.data);
+      });
     }
   }, [session]);
 
@@ -29,9 +34,6 @@ export default function DashboardPage() {
   if (!session) {
     return <div>Access Denied</div>;
   }
-
-  const publishedBlogs = userBlogs.filter((b) => b.isPublished);
-  const unpublishedBlogs = userBlogs.filter((b) => !b.isPublished);
 
   return (
     <div className='space-y-8'>

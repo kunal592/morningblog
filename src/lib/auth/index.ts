@@ -1,12 +1,12 @@
-import NextAuth from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
-import Google from "next-auth/providers/google";
+import NextAuth from 'next-auth';
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import { PrismaClient } from '@prisma/client';
+import Google from 'next-auth/providers/google';
 
 const prisma = new PrismaClient();
 
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-  throw new Error("Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET");
+  console.warn('Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET');
 }
 
 const { handlers, auth, signIn, signOut } = NextAuth({

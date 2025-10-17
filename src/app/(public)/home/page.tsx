@@ -1,15 +1,28 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { BlogCard } from "@/components/blog/blog-card"
 import { GridListToggle } from "@/components/layout/grid-list-toggle"
-import { mockBlogs } from "@/lib/mock-data"
 import { useLocalStorage } from "@/hooks/use-local-storage"
 import { cn } from "@/lib/utils"
+import { Post } from "@/lib/types"
+import axios from "axios"
 
 export default function HomePage() {
   const [view, setView] = useLocalStorage<"grid" | "list">("home-view", "grid")
-  const publishedBlogs = mockBlogs.filter(blog => blog.isPublished);
+  const [blogs, setBlogs] = useState<Post[]>([])
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await axios.get("/api/blogs");
+        setBlogs(res.data);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      }
+    };
+    fetchBlogs();
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -25,7 +38,7 @@ export default function HomePage() {
             : "space-y-8"
         )}
       >
-        {publishedBlogs.map((blog) => (
+        {blogs.map((blog) => (
           <BlogCard key={blog.id} blog={blog} view={view} />
         ))}
       </div>

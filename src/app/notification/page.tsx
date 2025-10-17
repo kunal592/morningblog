@@ -1,19 +1,45 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { mockNotifications, getImageById } from "@/lib/mock-data";
-import { Bell, MessageCircle, Trash2, UserPlus } from "lucide-react";
+'use client';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Bell, MessageCircle, Trash2, UserPlus } from 'lucide-react';
+import { useState, useEffect } from 'react';
+
+// TODO: Replace with actual notification data from API
+const mockNotifications = [
+  {
+    id: '1',
+    type: 'follow',
+    user: { name: 'John Doe', image: 'https://github.com/shadcn.png' },
+    timestamp: '2 hours ago',
+  },
+  {
+    id: '2',
+    type: 'comment',
+    user: { name: 'Jane Doe', image: 'https://github.com/shadcn.png' },
+    commentContent: 'This is a great post!',
+    timestamp: '4 hours ago',
+  },
+  {
+    id: '3',
+    type: 'report',
+    commentContent: 'This comment is inappropriate.',
+    timestamp: '1 day ago',
+  },
+];
 
 export default function NotificationPage() {
+  const [notifications, setNotifications] = useState(mockNotifications);
+
   return (
     <div className="space-y-8">
       <h1 className="text-3xl font-bold tracking-tight">Notifications</h1>
       <Card className="rounded-2xl">
         <CardContent className="p-0">
           <ul className="divide-y">
-            {mockNotifications.map((notification, index) => {
-              const userAvatar = notification.user ? getImageById(notification.user.avatarId) : null;
-              const isLast = index === mockNotifications.length - 1;
+            {notifications.map((notification, index) => {
+              const isLast = index === notifications.length - 1;
               return (
                 <li key={notification.id} className={`flex items-start gap-4 p-4 ${isLast ? '' : 'border-b'}`}>
                   <div className="mt-1">
@@ -23,9 +49,9 @@ export default function NotificationPage() {
                   </div>
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center gap-2">
-                      {notification.user && userAvatar && (
+                      {notification.user && (
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src={userAvatar.imageUrl} alt={notification.user.name} />
+                          <AvatarImage src={notification.user.image} alt={notification.user.name} />
                           <AvatarFallback>{notification.user.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                       )}

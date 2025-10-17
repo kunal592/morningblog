@@ -3,6 +3,7 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { auth } from "@/lib/auth";
 import { SignIn } from "@/components/auth/sign-in";
 import { SignOut } from "@/components/auth/sign-out";
+import { SearchBar } from "@/components/layout/search-bar";
 
 export async function PublicHeader() {
   const session = await auth();
@@ -23,6 +24,7 @@ export async function PublicHeader() {
         </span>
       </Link>
       <div className="flex items-center gap-4">
+        <SearchBar />
         <Link href="/about" passHref><span className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">About</span></Link>
         <Link href="/contactus" passHref><span className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Contact Us</span></Link>
         <ThemeToggle />
