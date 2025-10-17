@@ -1,84 +1,90 @@
-"use client"
 
-import Image from "next/image"
-import Link from "next/link"
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/components/ui/avatar"
+} from "@/components/ui/avatar";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Bookmark,
   Heart,
   Share2,
   MessageCircle,
   BrainCircuit,
-} from "lucide-react"
-import { Blog, getImageById } from "@/lib/mock-data"
-import { cn } from "@/lib/utils"
-import { useToast } from "@/hooks/use-toast"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog"
+  Edit,
+} from "lucide-react";
+import { Post } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
+import { useState, useEffect } from "react";
 
 interface BlogCardProps {
-  blog: Blog
-  view?: "grid" | "list"
+  blog: Post;
+  view?: "grid" | "list";
 }
 
 export function BlogCard({ blog, view = "grid" }: BlogCardProps) {
-  const { toast } = useToast()
-  const coverImage = getImageById(blog.imageId)
-  const authorAvatar = getImageById(blog.author.avatarId)
+  const { data: session } = useSession();
+  const { toast } = useToast();
+  const [isFollowing, setIsFollowing] = useState(false);
 
-  const handleFollow = () => {
+  useEffect(() => {
+    if (session?.user?.id && blog.author?.followers) {
+      setIsFollowing(
+        blog.author.followers.some((follower: any) => follower.id === session.user?.id)
+      );
+    }
+  }, [session, blog.author]);
+
+  const handleFollow = async () => {
+    if (!session || !blog.author) return;
+
+    const endpoint = isFollowing ? "unfollow" : "follow";
+    await fetch(`/api/users/${endpoint}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userIdToFollow: blog.author.id, userIdToUnfollow: blog.author.id }),
+    });
+    setIsFollowing(!isFollowing);
     toast({
-      title: "Author Followed",
-      description: `You are now following ${blog.author.name}.`,
+      title: isFollowing ? "Author Unfollowed" : "Author Followed",
+      description: `You are no${!isFollowing ? " longer" : "w"} following ${blog.author.name}.`,
     })
-  }
-  
-  const handleLike = () => {
-    toast({
-      title: "Post Liked",
-      description: `You liked \"${blog.title}\".`,
-    })
-  }
-  
-  const handleBookmark = () => {
-    toast({
-      title: "Post Bookmarked",
-      description: `\"${blog.title}\" has been added to your bookmarks.`,
-    })
-  }
+  };
 
   const cardContent = (
     <>
       <CardHeader className="p-0">
         <Link href={`/blog/${blog.slug}`} className="block">
-          {coverImage && (
+          {blog.thumbnailUrl && (
             <Image
-              src={coverImage.imageUrl}
-              alt={coverImage.description}
+              src={blog.thumbnailUrl}
+              alt={blog.title}
               width={view === "grid" ? 600 : 250}
               height={view === "grid" ? 400 : 150}
               className={cn("w-full rounded-t-2xl object-cover", view === 'grid' ? 'aspect-[3/2]' : 'aspect-[16/9]')}
-              data-ai-hint={coverImage.imageHint}
             />
           )}
         </Link>
       </CardHeader>
       <CardContent className={cn("flex flex-col flex-grow", view === "grid" ? "p-6" : "p-0 pl-6")}>
         <div className="mb-4 flex flex-wrap gap-2">
-          {blog.tags.map((tag) => (
-            <Badge key={tag} variant="secondary">
-              {tag}
+          {blog.postTags.map((tag: any) => (
+            <Badge key={tag.tagId} variant="secondary">
+              {tag.tagId}
             </Badge>
           ))}
         </div>
@@ -94,13 +100,13 @@ export function BlogCard({ blog, view = "grid" }: BlogCardProps) {
         <div className="mt-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10">
-              {authorAvatar && <AvatarImage src={authorAvatar.imageUrl} alt={blog.author.name} />}
-              <AvatarFallback>{blog.author.name.charAt(0)}</AvatarFallback>
+              {blog.author?.profileImage && <AvatarImage src={blog.author.profileImage} alt={blog.author.name || ""} />}
+              <AvatarFallback>{blog.author?.name?.charAt(0) || 'A'}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-semibold">{blog.author.name}</p>
+              <p className="font-semibold">{blog.author?.name || 'Anonymous'}</p>
               <p className="text-sm text-muted-foreground">
-                {new Date(blog.publishedAt).toLocaleDateString("en-US", {
+                {blog.publishedAt && new Date(blog.publishedAt).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
@@ -108,9 +114,18 @@ export function BlogCard({ blog, view = "grid" }: BlogCardProps) {
               </p>
             </div>
           </div>
-          <Button variant="secondary" size="sm" onClick={handleFollow}>
-            Follow
-          </Button>
+          {session?.user?.id === blog.authorId ? (
+            <Link href={`/blog/${blog.slug}/edit`}>
+              <Button variant="secondary" size="sm">
+                <Edit className="mr-2 h-4 w-4" />
+                Edit
+              </Button>
+            </Link>
+          ) : (
+            <Button variant="secondary" size="sm" onClick={handleFollow}>
+              {isFollowing ? "Unfollow" : "Follow"}
+            </Button>
+          )}
         </div>
       </CardContent>
     </>
@@ -126,9 +141,9 @@ export function BlogCard({ blog, view = "grid" }: BlogCardProps) {
             {cardContent}
             <CardFooter className="flex justify-between p-6 pt-0">
                 <div className="flex gap-1">
-                    <Button variant="ghost" size="icon" onClick={handleLike}><Heart className="h-5 w-5" /></Button>
+                    <Button variant="ghost" size="icon"><Heart className="h-5 w-5" /></Button>
                     <Button variant="ghost" size="icon"><Link href={`/blog/${blog.slug}#comments`}><MessageCircle className="h-5 w-5" /></Link></Button>
-                    <Button variant="ghost" size="icon" onClick={handleBookmark}><Bookmark className="h-5 w-5" /></Button>
+                    <Button variant="ghost" size="icon"><Bookmark className="h-5 w-5" /></Button>
                 </div>
                 <div className="flex gap-1">
                     <Dialog>

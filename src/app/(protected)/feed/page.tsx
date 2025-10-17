@@ -1,14 +1,26 @@
-"use client"
 
-import { useState } from 'react';
-import { Rss } from 'lucide-react';
-import { BlogCard } from '@/components/blog/blog-card';
-import { mockBlogs } from '@/lib/mock-data';
+"use client";
+
+import { useState, useEffect } from "react";
+import { Rss } from "lucide-react";
+import { BlogCard } from "@/components/blog/blog-card";
+import { Post } from "@/lib/types";
+import axios from "axios";
 
 export default function FeedPage() {
-  // Mock logic: assume user follows some authors
-  const [followsAuthors, setFollowsAuthors] = useState(true); 
-  const feedBlogs = followsAuthors ? mockBlogs.slice(0, 3) : [];
+  const [feedBlogs, setFeedBlogs] = useState<Post[]>([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await axios.get("/api/blogs/feed");
+        setFeedBlogs(res.data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+    fetchPosts();
+  }, []);
 
   return (
     <div className="space-y-8">
